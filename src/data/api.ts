@@ -11,9 +11,10 @@ const apiClient = axios.create({
   },
 });
 
-export interface getProductBenchmarks {
+export interface ProductBenchmarks {
   id : number,
   product_name: string,
+  provider_name: string;
   end_date : string,
   start_date : string,
   currency : {
@@ -25,7 +26,7 @@ export interface getProductBenchmarks {
   benchmark : number
 }
 
-export interface getExchangeRates {
+export interface ExchangeRates {
   exchange_rate : number,
   from_currency_id : number,
   to_curency_id : number,
@@ -33,13 +34,13 @@ export interface getExchangeRates {
 }
 
 export const getProductBenchmarks =  async () => {
-  const response = await apiClient.get<{ product_benchmarks: getProductBenchmarks}>('/product_benchmarks');
+  const response = await apiClient.get<{ product_benchmarks: ProductBenchmarks}>('/product_benchmarks');
   return response.data;
 
 }
 
 export const getExchangeRates =  async () => {
-  const response = await apiClient.get<{ exchange_rates: getExchangeRates}>('/exchange_rates');
+  const response = await apiClient.get<{ exchange_rates: ExchangeRates}>('/exchange_rates');
   return response.data;
 }
 

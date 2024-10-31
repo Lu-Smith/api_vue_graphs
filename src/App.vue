@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import {getProductBenchmarks, getExchangeRates} from './data/api';
+import {getExchangeRates, getProductBenchmarks} from './data/api';
 
 onMounted(async () =>{
   try {
-    console.log('product', getExchangeRates());
-    console.log('rates', getProductBenchmarks());
+    const productBenchamrks = getProductBenchmarks();
+    const exchangeRates = getExchangeRates();
+    console.log('rates', exchangeRates);
+    console.log('products', productBenchamrks);
   }
   catch (error) {
     console.error('Failed to fetch data:', error)

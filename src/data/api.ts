@@ -40,7 +40,7 @@ export const getProductBenchmarks =  async () => {
 
 export const getExchangeRates =  async () => {
   const response = await apiClient.get<{ exchange_rates: getExchangeRates}>('/exchange_rates');
-  return response.data
+  return response.data;
 }
 
 export default {

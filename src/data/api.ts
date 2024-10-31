@@ -29,18 +29,18 @@ export interface ProductBenchmarks {
 export interface ExchangeRates {
   exchange_rate : number,
   from_currency_id : number,
-  to_curency_id : number,
+  to_currency_id : number,
   year : number
 }
 
 export const getProductBenchmarks =  async () => {
-  const response = await apiClient.get<{ product_benchmarks: ProductBenchmarks}>('/product_benchmarks');
+  const response = await apiClient.get<{ product_benchmarks: ProductBenchmarks[]}>('/product_benchmarks');
   return response.data;
 
 }
 
 export const getExchangeRates =  async () => {
-  const response = await apiClient.get<{ exchange_rates: ExchangeRates}>('/exchange_rates');
+  const response = await apiClient.get<{ exchange_rates: ExchangeRates[]}>('/exchange_rates');
   return response.data;
 }
 

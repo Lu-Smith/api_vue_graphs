@@ -1,9 +1,12 @@
 <template>
-  <h2>Hello I am Table</h2>
+  <GraphComponent :transactions="transactions" />
+  <TableComponent :transactions="transactions" />
 </template>
 
 <script setup lang="ts">
 import { Transaction } from '../assets/intefaces';
+import GraphComponent from './GraphComponent.vue';
+import TableComponent from './TableComponent.vue';
 
 defineProps<{ transactions: Transaction[] }>();
 </script>

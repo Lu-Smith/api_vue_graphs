@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUnmount, ref } from 'vue';
 import * as echarts from 'echarts';
 import { Transaction } from '../assets/intefaces';
 
@@ -12,15 +12,40 @@ const props = defineProps<{ transactions: Transaction[], chartId: string }>();
 
 let myChart: echarts.ECharts | null = null;
 
+const years = ref<number[]>([]);
+const payments = ref<number[]>([]);
+const benchmarks = ref<number[]>([]);
+
+const extractYearlyData = () => {
+  const yearlyPaymentData: Record<number, number> = {};
+  const yearlyBenchmarkData: Record<number, number> = {};
+  
+  props.transactions.forEach(transaction => {
+    const year = new Date(transaction.start_date).getFullYear();
+
+    // Initialize if not already present
+    if (!yearlyPaymentData[year]) yearlyPaymentData[year] = 0;
+    if (!yearlyBenchmarkData[year]) yearlyBenchmarkData[year] = 0;
+
+    // Accumulate values
+    yearlyPaymentData[year] += transaction.payment;
+    yearlyBenchmarkData[year] += transaction.benchmark;
+  });
+
+  // Sort years and map data to arrays
+  years.value = Object.keys(yearlyPaymentData).map(Number).sort((a, b) => a - b);
+  payments.value = years.value.map(year => yearlyPaymentData[year]);
+  benchmarks.value = years.value.map(year => yearlyBenchmarkData[year]);
+}
+
 onMounted(() => {
+  extractYearlyData();
+
   myChart = echarts.init(document.getElementById(props.chartId) as HTMLElement);
 
-  const labels = props.transactions.map(tx => tx.start_date); 
-  const paymentData = props.transactions.map(tx => tx.payment);
-  const benchmarkData = props.transactions.map(tx => tx.benchmark);
 
   //chart
-
+  
   const options = {
     title: {
       text: 'Payment vs Benchmark',
@@ -33,7 +58,7 @@ onMounted(() => {
     },
     xAxis: {
       type: 'category',
-      data: labels,
+      data: years.value,
     },
     yAxis: {
       type: 'value',
@@ -42,7 +67,7 @@ onMounted(() => {
       {
         name: 'Payment (€)',
         type: 'bar',
-        data: paymentData,
+        data: payments.value,
         emphasis: {
           focus: 'series',
         },
@@ -50,7 +75,7 @@ onMounted(() => {
       {
         name: 'Benchmark (€)',
         type: 'bar',
-        data: benchmarkData,
+        data: benchmarks.value,
         emphasis: {
           focus: 'series',
         },

@@ -1,4 +1,5 @@
 <template>
+  <GraphAllComponent :transactions="transactions" />
   <div v-for="(groupProviderName, providerName) in groupTransactions.groupsProviderName" :key="providerName">
     <h3>Provider: {{ providerName }}</h3>
     <GraphComponent :transactions="groupProviderName" :chartId="`chart-provider-${providerName}`" />
@@ -16,6 +17,7 @@ import { computed } from 'vue';
 import { Transaction } from '../assets/intefaces';
 import GraphComponent from './GraphComponent.vue';
 import TableComponent from './TableComponent.vue';
+import GraphAllComponent from './GraphAllComponent.vue';
 
 const props = defineProps<{ transactions: Transaction[] }>();
 

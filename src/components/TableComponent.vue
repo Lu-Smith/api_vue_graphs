@@ -14,8 +14,11 @@
             {{ sortDirection === 'asc' ? '▲' : '▼' }}
           </span>
         </th>
-        <th> 
+        <th @click="changeSort('difference')"> 
           Difference (€)
+          <span v-if="currentSort === 'difference'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
         </th>
         <th @click="changeSort('start_date')"> 
           Start Date (€) 
@@ -68,10 +71,10 @@ const totalDifference  = computed(() => {
 });
 
 //sort
-const currentSort = ref< 'payment' | 'benchmark' | 'start_date' | 'end_date'>('start_date'); 
+const currentSort = ref< 'payment' | 'benchmark' | 'difference' | 'start_date' | 'end_date'>('start_date'); 
 const sortDirection = ref<'asc' | 'desc'>('asc');
 
-const changeSort = (column: ('payment' | 'benchmark' | 'start_date' | 'end_date')) => {
+const changeSort = (column: ('payment' | 'benchmark' | 'difference' | 'start_date' | 'end_date')) => {
   
   if (currentSort.value === column) {
     sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
@@ -85,9 +88,26 @@ const sortTransactions = computed(() => {
   const sorted = [...props.transactions];
 
   sorted.sort((a, b) => {
-    const comparision = new Date(a[currentSort.value]).getTime() - new Date(b[currentSort.value]).getTime();
+    let comparison = 0;
+
+    const differenceA = a.payment - a.benchmark;
+    const differenceB = b.payment - b.benchmark;
+
+    if (currentSort.value === 'difference') {
+      // Compare the calculated differences
+      comparison = differenceA - differenceB;
+    } else if (['start_date', 'end_date'].includes(currentSort.value)) {
+      // Compare dates
+      comparison = new Date(a[currentSort.value]).getTime() - new Date(b[currentSort.value]).getTime();
+    } else if (['payment'].includes(currentSort.value)) {
+      // Compare numerical values for payment
+      comparison = a.payment - b.payment;
+    } else {
+      // Compare numerical values for benchmark
+      comparison = a.benchmark - b.benchmark;
+    }
     
-    return sortDirection.value === 'asc' ? comparision : -comparision;
+    return sortDirection.value === 'asc' ? comparison : -comparison;
   })
 
   return sorted

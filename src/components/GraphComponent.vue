@@ -1,10 +1,11 @@
 <template>
   <h2>Graph</h2>
+  <button @click="changeGraph">Change Graph</button>
   <div :id="chartId" style="width: 100%; height: 400px;"></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref, watch } from 'vue';
 import * as echarts from 'echarts';
 import { Transaction } from '../assets/intefaces';
 
@@ -15,6 +16,14 @@ let myChart: echarts.ECharts | null = null;
 const years = ref<number[]>([]);
 const payments = ref<number[]>([]);
 const benchmarks = ref<number[]>([]);
+
+//Change Graph
+
+const typeBenchmark = ref<'line' | 'bar'>('line');
+
+const changeGraph = () => {
+  typeBenchmark.value = typeBenchmark.value === 'line' ? 'bar' : 'line';
+}
 
 const extractYearlyData = () => {
   const yearlyPaymentData: Record<number, number> = {};
@@ -38,14 +47,9 @@ const extractYearlyData = () => {
   benchmarks.value = years.value.map(year => yearlyBenchmarkData[year]);
 }
 
-onMounted(() => {
-  extractYearlyData();
+const setChartOptions = () => {
+  if (!myChart) return;
 
-  myChart = echarts.init(document.getElementById(props.chartId) as HTMLElement);
-
-
-  //chart
-  
   const options = {
     title: {
       text: 'Payment vs Benchmark',
@@ -74,7 +78,7 @@ onMounted(() => {
       },
       {
         name: 'Benchmark (€)',
-        type: 'bar',
+        type: typeBenchmark.value,  // Dynamic type based on toggle
         data: benchmarks.value,
         emphasis: {
           focus: 'series',
@@ -84,20 +88,29 @@ onMounted(() => {
   };
 
   myChart.setOption(options);
+};
 
+onMounted(() => {
+  extractYearlyData();
+  myChart = echarts.init(document.getElementById(props.chartId) as HTMLElement);
+  setChartOptions();  // Initial render
 
-  //Resize
+  // Resize listener
   window.addEventListener('resize', () => {
     myChart?.resize();
   });
-
-  // Cleanup
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', () => myChart?.resize());
-    myChart?.dispose();
-  });
-
 });
 
-//chart 
+// Watch for changes to re-render chart on update
+watch([() => props.transactions, typeBenchmark], () => {
+  extractYearlyData();
+  setChartOptions();
+});
+
+// Cleanup on component unmount
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', () => myChart?.resize());
+  myChart?.dispose();
+});
+ 
 </script>

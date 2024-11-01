@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ProductBenchmarks, ExchangeRates } from '../assets/intefaces';
 
 const BASE_URL = 'https://substantive.pythonanywhere.com';
 
@@ -11,27 +12,6 @@ const apiClient = axios.create({
   },
 });
 
-export interface ProductBenchmarks {
-  id : number,
-  product_name: string,
-  provider_name: string;
-  end_date : string,
-  start_date : string,
-  currency : {
-    id: number,
-    name: string,
-    symbol: string,
-  },
-  payment : number,
-  benchmark : number
-}
-
-export interface ExchangeRates {
-  exchange_rate : number,
-  from_currency_id : number,
-  to_currency_id : number,
-  year : number
-}
 
 export const getProductBenchmarks =  async () => {
   const response = await apiClient.get<{ product_benchmarks: ProductBenchmarks[]}>('/product_benchmarks');

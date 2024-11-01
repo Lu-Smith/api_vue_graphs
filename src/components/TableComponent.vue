@@ -3,9 +3,20 @@
     <thead>
       <tr>
         <th> {{ name }} (€)</th>
-        <th> Payment (€)</th>
-        <th> Benchmark (€)</th>
-        <th> Difference (€)</th>
+        <th @click="changeSort('payment')"> 
+          Payment (€)
+          <span v-if="currentSort === 'payment'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span></th>
+        <th @click="changeSort('benchmark')"> 
+          Benchmark (€)
+          <span v-if="currentSort === 'benchmark'">
+            {{ sortDirection === 'asc' ? '▲' : '▼' }}
+          </span>
+        </th>
+        <th> 
+          Difference (€)
+        </th>
         <th @click="changeSort('start_date')"> 
           Start Date (€) 
           <span v-if="currentSort === 'start_date'">
@@ -57,16 +68,17 @@ const totalDifference  = computed(() => {
 });
 
 //sort
-const currentSort = ref<'start_date' | 'end_date'>('start_date'); 
+const currentSort = ref< 'payment' | 'benchmark' | 'start_date' | 'end_date'>('start_date'); 
 const sortDirection = ref<'asc' | 'desc'>('asc');
 
-const changeSort = (column: ('start_date' | 'end_date')) => {
-  if(column === 'start_date') {
-    currentSort.value = 'start_date';
+const changeSort = (column: ('payment' | 'benchmark' | 'start_date' | 'end_date')) => {
+  
+  if (currentSort.value === column) {
+    sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
   } else {
-    currentSort.value = 'end_date';
+    currentSort.value = column;
+    sortDirection.value = 'asc';
   }
-  sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
 };
 
 const sortTransactions = computed(() => {

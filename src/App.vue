@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import { getExchangeRates, getProductBenchmarks, ExchangeRates, ProductBenchmarks } from './data/api';
-import { Transaction } from './assets/intefaces';
+import { getExchangeRates, getProductBenchmarks} from './data/api';
+import { Transaction, ExchangeRates, ProductBenchmarks  } from './assets/intefaces';
+import ProductBenchmarkComponent from './components/PaymentBenchmarksComponent.vue';
 
-const transaction = ref<Transaction[]>([]);
+const transactions = ref<Transaction[]>([]);
 
 onMounted(async () =>{
   try {
     const productBenchmarks = await getProductBenchmarks();
     const exchangeRates = await getExchangeRates();
 
-    transaction.value = processProviderData(productBenchmarks.product_benchmarks, exchangeRates.exchange_rates)
+    transactions.value = processProviderData(productBenchmarks.product_benchmarks, exchangeRates.exchange_rates)
 
     console.log(exchangeRates);
   }
@@ -57,7 +58,7 @@ const processProviderData = (benchmarks: ProductBenchmarks[], rates: ExchangeRat
 
 <template>
   <h1>We Are Graphs</h1>
-
+<ProductBenchmarkComponent :transactions="transactions"/>
 </template>
 
 <style scoped>

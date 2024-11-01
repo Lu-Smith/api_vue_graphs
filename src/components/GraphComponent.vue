@@ -1,6 +1,8 @@
 <template>
   <h2>Graph</h2>
-  <button @click="changeGraph">Change Graph</button>
+  <button @click="changeGraph('bar', 'bar')">Graph 1</button>
+  <button @click="changeGraph('line', 'bar')">Graph 2</button>
+  <button @click="changeGraph('line', 'scatter')">Graph 3</button>
   <div :id="chartId" style="width: 100%; height: 400px;"></div>
 </template>
 
@@ -19,10 +21,15 @@ const benchmarks = ref<number[]>([]);
 
 //Change Graph
 
-const typeBenchmark = ref<'line' | 'bar'>('line');
+type BenchmarkChartType = 'bar' | 'line' | 'scatter' ;
+const typeBenchmarkChart = ref<BenchmarkChartType>('bar');
 
-const changeGraph = () => {
-  typeBenchmark.value = typeBenchmark.value === 'line' ? 'bar' : 'line';
+type PaymentChartType = 'bar' | 'line' | 'scatter' ;
+const typePaymentChart = ref<PaymentChartType>('bar');
+
+const changeGraph = (typeBenchmark: BenchmarkChartType, typePayment: PaymentChartType,) => {
+  typeBenchmarkChart.value = typeBenchmark;
+  typePaymentChart.value = typePayment;
 }
 
 const extractYearlyData = () => {
@@ -37,8 +44,8 @@ const extractYearlyData = () => {
     if (!yearlyBenchmarkData[year]) yearlyBenchmarkData[year] = 0;
 
     // Accumulate values
-    yearlyPaymentData[year] += transaction.payment;
-    yearlyBenchmarkData[year] += transaction.benchmark;
+    yearlyPaymentData[year] += Math.round(transaction.payment);
+    yearlyBenchmarkData[year] += Math.round(transaction.benchmark);
   });
 
   // Sort years and map data to arrays
@@ -70,7 +77,7 @@ const setChartOptions = () => {
     series: [
       {
         name: 'Payment (€)',
-        type: 'bar',
+        type: typePaymentChart.value,
         data: payments.value,
         emphasis: {
           focus: 'series',
@@ -78,7 +85,7 @@ const setChartOptions = () => {
       },
       {
         name: 'Benchmark (€)',
-        type: typeBenchmark.value,  // Dynamic type based on toggle
+        type: typeBenchmarkChart.value,  // Dynamic type based on toggle
         data: benchmarks.value,
         emphasis: {
           focus: 'series',
@@ -102,7 +109,7 @@ onMounted(() => {
 });
 
 // Watch for changes to re-render chart on update
-watch([() => props.transactions, typeBenchmark], () => {
+watch([() => props.transactions, typeBenchmarkChart, typePaymentChart], () => {
   extractYearlyData();
   setChartOptions();
 });

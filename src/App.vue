@@ -11,14 +11,12 @@ onMounted(async () =>{
     const productBenchmarks = await getProductBenchmarks();
     const exchangeRates = await getExchangeRates();
 
-    transactions.value = processProviderData(productBenchmarks.product_benchmarks, exchangeRates.exchange_rates)
-
-    console.log(exchangeRates);
+    transactions.value = processProviderData(productBenchmarks.product_benchmarks, exchangeRates.exchange_rates);
   }
   catch (error) {
-    console.error('Failed to fetch data:', error)
+    console.error('Failed to fetch data:', error);
   }
-})
+});
 
 const processProviderData = (benchmarks: ProductBenchmarks[], rates: ExchangeRates[]): Transaction[] => {
   const transactionList: Transaction[] = [];
@@ -58,7 +56,7 @@ const processProviderData = (benchmarks: ProductBenchmarks[], rates: ExchangeRat
 
 <template>
   <h1>We Are Graphs</h1>
-<ProductBenchmarkComponent :transactions="transactions"/>
+  <ProductBenchmarkComponent :transactions="transactions"/>
 </template>
 
 <style scoped>

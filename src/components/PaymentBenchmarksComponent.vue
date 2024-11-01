@@ -1,12 +1,12 @@
 <template>
   <div v-for="(groupProviderName, providerName) in groupTransactions.groupsProviderName" :key="providerName">
     <h3>Provider: {{ providerName }}</h3>
-    <GraphComponent :transactions="groupProviderName" />
+    <GraphComponent :transactions="groupProviderName" :chartId="`chart-provider-${providerName}`" />
     <TableComponent :transactions="groupProviderName" keyName="provider_name" />
   </div>
   <div v-for="(groupProductName, productName) in groupTransactions.groupsProductName" :key="productName" >
     <h3>Product: {{ productName }}</h3>
-    <GraphComponent :transactions="groupProductName" />
+    <GraphComponent :transactions="groupProductName" :chartId="`chart-product-${productName}`" />
     <TableComponent :transactions="groupProductName" keyName="product_name" />
   </div>
 </template>

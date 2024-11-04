@@ -55,7 +55,7 @@ const processProviderData = (benchmarks: ProductBenchmarks[], rates: ExchangeRat
 </script>
 
 <template>
-  <h1>We Are Graphs</h1>
+  <h1 class="mb-4">We Are Graphs</h1>
   <ProductBenchmarkComponent :transactions="transactions"/>
 </template>
 

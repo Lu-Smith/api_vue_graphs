@@ -1,8 +1,8 @@
 <template>
   <h2>Graph</h2>
-  <button @click="changeGraph('bar', 'bar')">Graph 1</button>
-  <button @click="changeGraph('line', 'bar')">Graph 2</button>
-  <button @click="changeGraph('line', 'scatter')">Graph 3</button>
+  <button  class="m-4" @click="changeGraph('bar', 'bar')">Graph 1</button>
+  <button  class="m-4" @click="changeGraph('line', 'bar')">Graph 2</button>
+  <button  class="m-4" @click="changeGraph('line', 'scatter')">Graph 3</button>
   <div :id="chartId" style="width: 100%; height: 400px;"></div>
 </template>
 

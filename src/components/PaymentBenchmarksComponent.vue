@@ -1,8 +1,12 @@
 <template>
   <GraphAllComponent :transactions="transactions" />
-  <div v-for="(groupProviderName, providerName) in groupTransactions.groupsProviderName" :key="providerName">
+  <div 
+  v-for="(groupProviderName, providerName) in groupTransactions.groupsProviderName"
+  :key="providerName">
     <h3>Provider: {{ providerName }}</h3>
-    <GraphComponent :transactions="groupProviderName" :chartId="`chart-provider-${providerName}`" />
+    <GraphComponent    
+    :transactions="groupProviderName" 
+    :chartId="`chart-provider-${providerName}`" />
     <TableComponent :transactions="groupProviderName" keyName="provider_name" />
   </div>
   <div v-for="(groupProductName, productName) in groupTransactions.groupsProductName" :key="productName" >

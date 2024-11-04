@@ -1,9 +1,9 @@
 <template>
-  <h2>Summary</h2>
-  <button @click="changeAllGraph('rose')">Graph 1</button>
-  <button @click="changeAllGraph('ring')">Graph 2</button>
-  <button @click="changeAllGraph('basic')">Graph 3</button>
-  <div id="allCharts" style="width: 100%; height: 400px;"></div>
+  <h2 class="mb-4">Summary</h2>
+  <button class="m-3" @click="changeAllGraph('rose')">Graph 1</button>
+  <button class="m-3" @click="changeAllGraph('ring')">Graph 2</button>
+  <button class="m-3" @click="changeAllGraph('basic')">Graph 3</button>
+  <div class="place-content-center mt-4" id="allCharts" style="width: 100%; height: 400px;"></div>
 </template>
 
 <script setup lang="ts">
